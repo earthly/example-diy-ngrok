@@ -64,18 +64,21 @@ aws ec2 wait instance-status-ok --instance-ids $EC2_ID
 EC2_PUBLIC=$(aws ec2 describe-instances --instance-ids $EC2_ID | jq -r ".Reservations[].Instances[].PublicDnsName")
 echo "Instance is running; public DNS is: $EC2_PUBLIC"
 
-# echo "Configuring NGINX..."
-# chmod 600 key.pem
-# ssh -o 'StrictHostKeyChecking=accept-new' -i key.pem ec2-user@$EC2_PUBLIC 'sudo amazon-linux-extras install nginx1'
+echo "Configuring NGINX..."
+chmod 600 key.pem
+ssh -o 'StrictHostKeyChecking=accept-new' -i key.pem ec2-user@$EC2_PUBLIC 'sudo amazon-linux-extras install nginx1'
 
-# PORT="8080"
+PORT="8080"
 
-# sed -i "s/PORT/$PORT/g" server.conf
-# sed -i "s/PUBLIC_DNS/$EC2_PUBLIC/g" server.conf
-# cat server.conf
-# scp -i key.pem server.conf ec2-user@$EC2_PUBLIC:/home/ec2-user
+sed -i "s/PORT/$PORT/g" server.conf
+sed -i "s/PUBLIC_DNS/$EC2_PUBLIC/g" server.conf
+cat server.conf
+scp -i key.pem server.conf ec2-user@$EC2_PUBLIC:/home/ec2-user
 
-# ssh -i key.pem ec2-user@$EC2_PUBLIC 'sudo cp /home/ec2-user/server.conf /etc/nginx/conf.d/server.conf'
+ssh -i key.pem ec2-user@$EC2_PUBLIC 'sudo cp /home/ec2-user/server.conf /etc/nginx/conf.d/server.conf'
+ssh -i key.pem ec2-user@$EC2_PUBLIC 'sudo sed -i "/types_hash_max_size 4096/ a\ \ \ \ server_names_hash_bucket_size 128;" /etc/nginx/nginx.conf'
 
-# echo "Starting NGINX..."
-# ssh -i key.pem ec2-user@$EC2_PUBLIC 'sudo service nginx start'
+echo "Starting NGINX..."
+ssh -i key.pem ec2-user@$EC2_PUBLIC 'sudo service nginx start'
+
+echo "Proxy is ready!"

@@ -16,7 +16,8 @@ build-proxy:
         ./build.sh
     
     COPY delete.sh .
-    ENTRYPOINT ./delete.sh
+    COPY entrypoint.sh
+    ENTRYPOINT ./entrypoint.sh
     
     SAVE IMAGE proxy:latest
 

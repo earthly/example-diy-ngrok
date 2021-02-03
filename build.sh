@@ -50,19 +50,20 @@ aws ec2 run-instances \
 
 EC2_ID=$(jq -r '.Instances[0].InstanceId' ec2-output.json)
 
-cat << EOF > resources.json
-{
-    "EC2_ID": "$EC2_ID",
-    "KEY_ID": "$KEY_ID",
-    "SG_ID": "$SG_ID"
-}
-EOF
-
 echo "Waiting for Instance to Start..."
 aws ec2 wait instance-status-ok --instance-ids $EC2_ID
 
 EC2_PUBLIC=$(aws ec2 describe-instances --instance-ids $EC2_ID | jq -r ".Reservations[].Instances[].PublicDnsName")
 echo "Instance is running; public DNS is: $EC2_PUBLIC"
+
+cat << EOF > resources.json
+{
+    "EC2_PUBLIC": "$EC2_PUBLIC",
+    "EC2_ID": "$EC2_ID",
+    "KEY_ID": "$KEY_ID",
+    "SG_ID": "$SG_ID"
+}
+EOF
 
 echo "Configuring NGINX..."
 chmod 600 key.pem

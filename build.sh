@@ -67,7 +67,7 @@ EOF
 
 echo "Configuring NGINX..."
 chmod 600 key.pem
-ssh -o 'StrictHostKeyChecking=accept-new' -i key.pem ec2-user@$EC2_PUBLIC 'sudo amazon-linux-extras install nginx1'
+ssh -o 'StrictHostKeyChecking=no' -i key.pem ec2-user@$EC2_PUBLIC 'sudo amazon-linux-extras install nginx1'
 
 PORT="8080"
 

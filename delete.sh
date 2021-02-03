@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Terminating instance..."
-aws ec2 terminate-instances --no-cli-pager --instance-ids $(jq -r .EC2_ID resources.json)
+aws ec2 terminate-instances --no-cli-pager --instance-ids $(jq -r .EC2_ID resources.json) > /dev/null
 
 echo "Waiting for instance termination..."
 aws ec2 wait instance-terminated --no-cli-pager --instance-ids $(jq -r .EC2_ID resources.json)

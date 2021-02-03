@@ -2,16 +2,16 @@
 
 case "$1" in
     "--key")
-    cat key.pem
+    cat ./key.pem
     ;;
     "--destroy")
     exec ./delete.sh
     ;;
     "--resources")
-    jq resources.json
+    jq ./resources.json
     ;;
     "--proxy-cmd")
-    ssh -i key.pem -R 8080:localhost:3000 ec2-user@$(jq .EC2_PUBLIC resources.json)
+    ssh -i key.pem -R 8080:localhost:3000 ec2-user@$(jq .EC2_PUBLIC ./resources.json)
     ;;
     *)
     echo "Valid options: --key / --destroy / --resources / --proxy-cmd"

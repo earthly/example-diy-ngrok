@@ -11,7 +11,7 @@ case "$1" in
     jq . /aws/resources.json
     ;;
     "--proxy-cmd")
-    ssh -i key.pem -R 8080:localhost:3000 ec2-user@$(jq .EC2_PUBLIC /aws/resources.json)
+    echo "ssh -i key.pem -R 8080:localhost:3000 ec2-user@$(jq .EC2_PUBLIC /aws/resources.json)"
     ;;
     *)
     echo "Valid options: --key / --destroy / --resources / --proxy-cmd"
